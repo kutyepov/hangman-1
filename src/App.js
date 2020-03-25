@@ -16,7 +16,7 @@ function GuessAmount({ guesses = [] }) {
 
 function Hangman() {
   return (
-    <p>Hangman</p>
+    <img src='http://4.bp.blogspot.com/-6xqP75TYEUk/UDAk41KvIfI/AAAAAAAAAqU/kihmttv7iPg/s1600/Hangman.png'></img>
   )
 }
 
@@ -31,7 +31,18 @@ function Answer() {
 class AnswerInput extends React.Component {
   render() {
     return (
-      <input />
+      <input type="text" maxlength = "1"></input>
+    )
+  }
+}
+
+class HiddenInput extends React.Component {
+  render() {
+    return (
+    <div>
+      <input type="password"></input>
+      <button>Start Game</button>
+    </div>
     )
   }
 }
@@ -54,20 +65,11 @@ class HangmanContainer extends React.Component {
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+     <GuessAmount />
+     <Hangman />
+     <Answer />
+     <AnswerInput />
+     <HiddenInput />
     </div>
   );
 }
