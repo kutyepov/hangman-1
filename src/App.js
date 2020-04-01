@@ -20,12 +20,23 @@ function Hangman() {
   )
 }
 
-function Answer({ word }) {
+function Answer({ word, letter }) {
   console.log('word', word);
   console.log(word.length);
+  console.log(letter);
+  // ['b','a','n','a','n','a']
+  // 'b'
+  for (let i = 0; i < word.length; i++) {
+    if(word[i] === letter) {
+      // do something
+      console.log('there is match!');
+    }   
+  }
+
   let lines = [
 
   ]
+
 
   for (let i = 0; i < word.length; i++) {
     lines.push(<li>_</li>);
@@ -53,7 +64,7 @@ class AnswerInput extends React.Component {
         }} />
         <button onClick={() => {
           console.log(this.state.inputValue);
-          //this.props.onInputSubmitted(this.state.inputValue);
+          this.props.onInputSubmitted(this.state.inputValue);
         }}>Guess</button>
       </div>
     )
@@ -101,7 +112,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      word: ''
+      word: '',
+      letter: ''
     }
   }
 
@@ -111,8 +123,12 @@ class App extends React.Component {
       <div className="App">
         <GuessAmount />
         <Hangman />
-        <Answer word={this.state.word} />
-        <AnswerInput />
+        <Answer word={this.state.word}
+                letter={this.state.letter}
+        />
+        <AnswerInput onInputSubmitted={(letter) => {
+          this.setState({ letter });
+        }} />
         <HiddenInput onInputSubmitted={(word) => {
           this.setState({ word });
         }} />
