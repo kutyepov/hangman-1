@@ -20,34 +20,61 @@ function Hangman() {
   )
 }
 
-function Answer({ word, letter }) {
-  console.log('word', word);
-  console.log(word.length);
-  console.log(letter);
-  // ['b','a','n','a','n','a']
-  // 'b'
-  for (let i = 0; i < word.length; i++) {
-    if(word[i] === letter) {
-      // do something
-      console.log('there is match!');
-    }   
+class Answer extends React.Component {
+  constructor(props) {
+    super(props);
   }
 
-  let lines = [
+  render() {
+    const { word, letter, correctlyGuessedLetters } = this.props;
+    let lines = []
+    console.log(correctlyGuessedLetters);
+    //apple
+    //["a", "p", "p", "l", "e"]
+    // correctlyGuessedLetters
+    //['a', 'e']
+    let haveWeEverHitElseClause = false;
+    for (let i = 0; i < word.length; i++) {
+      if (correctlyGuessedLetters.indexOf(word[i]) != -1) {
+        lines.push(<li>{word[i]}</li>);
+      } else {
+        haveWeEverHitElseClause = true;
+        lines.push(<li>_</li>);
+      }
+    }
 
-  ]
+    if (!haveWeEverHitElseClause) {
+      alert('congrats');
+    }
 
-
-  for (let i = 0; i < word.length; i++) {
-    lines.push(<li>_</li>);
+    return (
+      <ul>
+        {lines}
+      </ul>
+    );
   }
-
-  return (
-    <ul>
-      {lines}
-    </ul>
-  );
 }
+
+class IncorrectLetters extends React.Component {
+  constructor(props) {
+    super(props);
+  };
+
+  render() {
+    let wrongLetters = []
+
+    if (correctlyGuessedLetters.indexOf(word[i]) = -1) {
+      wrongLettters.push(<li>{word[i]}</li>);
+    } else {
+    
+    }
+  
+    return (<p>fff</p>)
+
+    }
+
+}
+
 
 class AnswerInput extends React.Component {
   constructor(props) {
@@ -113,7 +140,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       word: '',
-      letter: ''
+      letter: '',
+      correctlyGuessedLetters: [],
     }
   }
 
@@ -123,11 +151,18 @@ class App extends React.Component {
       <div className="App">
         <GuessAmount />
         <Hangman />
+        <IncorrectLetters />
         <Answer word={this.state.word}
-                letter={this.state.letter}
+          letter={this.state.letter}
+          correctlyGuessedLetters={this.state.correctlyGuessedLetters}
         />
         <AnswerInput onInputSubmitted={(letter) => {
-          this.setState({ letter });
+          const isThisCorrectLetter = this.state.word.indexOf(letter) !== -1;
+          let updatedCorrectlyGuessedLetters = this.state.correctlyGuessedLetters.slice();
+          if (isThisCorrectLetter) {
+            updatedCorrectlyGuessedLetters.push(letter);
+          }
+          this.setState({ letter, correctlyGuessedLetters: updatedCorrectlyGuessedLetters });
         }} />
         <HiddenInput onInputSubmitted={(word) => {
           this.setState({ word });
