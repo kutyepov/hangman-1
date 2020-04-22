@@ -61,15 +61,20 @@ class IncorrectLetters extends React.Component {
   };
 
   render() {
-    let wrongLetters = []
+      let word = this.props.word;
+      let correctlyGuessedLetters = this.props.correctlyGuessedLetters;
+      let wrongLetters = this.props.wrongLetters;
 
-    if (correctlyGuessedLetters.indexOf(word[i]) = -1) {
-      wrongLettters.push(<li>{word[i]}</li>);
-    } else {
-    
-    }
-  
-    return (<p>fff</p>)
+
+
+      return (
+        <div>
+          <span>Wrong Letters:</span>
+          {
+            wrongLetters
+          }
+        </div>
+      )
 
     }
 
@@ -142,7 +147,8 @@ class App extends React.Component {
       word: '',
       letter: '',
       correctlyGuessedLetters: [],
-    }
+      wrongLetters: [],
+    };
   }
 
   render() {
@@ -151,18 +157,31 @@ class App extends React.Component {
       <div className="App">
         <GuessAmount />
         <Hangman />
-        <IncorrectLetters />
-        <Answer word={this.state.word}
+        <IncorrectLetters 
+          correctlyGuessedLetters={this.state.correctlyGuessedLetters}
+          word={this.state.word}
+          wrongLetters={this.state.wrongLetters}
+        />
+        <Answer 
+          word={this.state.word}
           letter={this.state.letter}
           correctlyGuessedLetters={this.state.correctlyGuessedLetters}
         />
         <AnswerInput onInputSubmitted={(letter) => {
           const isThisCorrectLetter = this.state.word.indexOf(letter) !== -1;
           let updatedCorrectlyGuessedLetters = this.state.correctlyGuessedLetters.slice();
+          let updatedIncorrectlyGuessedLetters = this.state.wrongLetters.slice();
+          
           if (isThisCorrectLetter) {
             updatedCorrectlyGuessedLetters.push(letter);
+          } else {
+            updatedIncorrectlyGuessedLetters.push(letter);
           }
-          this.setState({ letter, correctlyGuessedLetters: updatedCorrectlyGuessedLetters });
+          this.setState({ 
+            letter,
+            correctlyGuessedLetters: updatedCorrectlyGuessedLetters,
+            wrongLetters: updatedIncorrectlyGuessedLetters,
+          });
         }} />
         <HiddenInput onInputSubmitted={(word) => {
           this.setState({ word });
