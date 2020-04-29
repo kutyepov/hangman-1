@@ -156,7 +156,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <GuessAmount />
-        <Hangman hang={1} />
+        <Hangman hang={this.state.wrongLetters.length} />
         <IncorrectLetters 
           correctlyGuessedLetters={this.state.correctlyGuessedLetters}
           word={this.state.word}
