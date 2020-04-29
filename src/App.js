@@ -14,9 +14,9 @@ function GuessAmount({ guesses = [] }) {
   );
 }
 
-function Hangman() {
+function Hangman(props) {
   return (
-    <img src='http://4.bp.blogspot.com/-6xqP75TYEUk/UDAk41KvIfI/AAAAAAAAAqU/kihmttv7iPg/s1600/Hangman.png'></img>
+    <img src={'./images/hang' + props.hang + '.png'}></img>
   )
 }
 
@@ -156,7 +156,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <GuessAmount />
-        <Hangman />
+        <Hangman hang={1} />
         <IncorrectLetters 
           correctlyGuessedLetters={this.state.correctlyGuessedLetters}
           word={this.state.word}
