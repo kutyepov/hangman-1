@@ -1,44 +1,29 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Button from 'react-bootstrap/Button';
-import InputGroup from 'react-bootstrap/InputGroup'
+import InputGroup from 'react-bootstrap/InputGroup';
 
 function GuessAmount({ guesses = [] }) {
   return (
     <ul>
       {guesses.map(({ guess_letter }) => (
-        <li>
-          {guess_letter}
-        </li>
+        <li>{guess_letter}</li>
       ))}
     </ul>
   );
 }
 
 function Hangman(props) {
-  return (
-    <img src={'./images/hang' + props.hang + '.png'}></img>
-  )
+  return <img src={'./images/hang' + props.hang + '.png'} alt="" />;
 }
 
 class Answer extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
-    const { word, letter, correctlyGuessedLetters } = this.props;
+    const { word, correctlyGuessedLetters } = this.props;
     let lines = [];
-    // let wrongLetters = this.props.wrongLetters.length;
-    console.log(correctlyGuessedLetters);
-    //apple
-    //["a", "p", "p", "l", "e"]
-    // correctlyGuessedLetters
-    //['a', 'e']
     let haveWeEverHitElseClause = 0;
     for (let i = 0; i < word.length; i++) {
-      if (correctlyGuessedLetters.indexOf(word[i]) != -1) {
+      if (correctlyGuessedLetters.indexOf(word[i]) !== -1) {
         lines.push(<li>{word[i]}</li>);
         ++haveWeEverHitElseClause;
       } else {
@@ -51,46 +36,27 @@ class Answer extends React.Component {
       alert('congrats');
     }
 
-    return (
-      <ul>
-        {lines}
-      </ul>
-    );
+    return <ul>{lines}</ul>;
   }
-
-
 }
 
 class IncorrectLetters extends React.Component {
-  constructor(props) {
-    super(props);
-  };
-
   render() {
-    let word = this.props.word;
-    let correctlyGuessedLetters = this.props.correctlyGuessedLetters;
     let wrongLetters = this.props.wrongLetters;
 
-    console.log(wrongLetters.length);
-
     if (wrongLetters.length > 7) {
-      alert("You Lose");
+      alert('You Lose');
       window.location.reload(false);
     }
 
     return (
       <div>
         <span>Wrong Letters:</span>
-        {
-          wrongLetters
-        }
+        {wrongLetters}
       </div>
-    )
-
+    );
   }
-
 }
-
 
 class AnswerInput extends React.Component {
   constructor(props) {
@@ -102,15 +68,24 @@ class AnswerInput extends React.Component {
   render() {
     return (
       <div>
-        <input type="text" maxLength="1" value={this.state.inputValue} onChange={(e) => {
-          this.setState({ inputValue: e.target.value })
-        }} />
-        <Button onClick={() => {
-          console.log(this.state.inputValue);
-          this.props.onInputSubmitted(this.state.inputValue);
-        }}>Guess</Button>
+        <input
+          type="text"
+          maxLength="1"
+          value={this.state.inputValue}
+          onChange={(e) => {
+            this.setState({ inputValue: e.target.value });
+          }}
+        />
+        <Button
+          onClick={() => {
+            console.log(this.state.inputValue);
+            this.props.onInputSubmitted(this.state.inputValue);
+          }}
+        >
+          Guess
+        </Button>
       </div>
-    )
+    );
   }
 }
 
@@ -125,31 +100,24 @@ class HiddenInput extends React.Component {
   render() {
     return (
       <div>
-        <input type="password" value={this.state.inputValue} onChange={(e) => {
-          this.setState({ inputValue: e.target.value.replace(' ', '') })
-        }} />
-        <Button onClick={() => {
-          if (this.state.inputValue.length >= 0) {
-            this.props.onInputSubmitted(this.state.inputValue);
-          }
-        }}>Start Game</Button>
+        <input
+          type="password"
+          value={this.state.inputValue}
+          onChange={(e) => {
+            this.setState({ inputValue: e.target.value.replace(' ', '') });
+          }}
+        />
+        <Button
+          onClick={() => {
+            if (this.state.inputValue.length >= 0) {
+              this.props.onInputSubmitted(this.state.inputValue);
+            }
+          }}
+        >
+          Start Game
+        </Button>
       </div>
-    )
-  }
-}
-
-class HangmanContainer extends React.Component {
-  constructor(props) {
-    this.state = {};
-  }
-
-  render() {
-    return (
-      <div>
-        <GuessAmount />
-        <Hangman />
-      </div>
-    )
+    );
   }
 }
 
@@ -165,7 +133,6 @@ class App extends React.Component {
   }
 
   render() {
-
     return (
       <div className="App">
         <GuessAmount />
@@ -180,25 +147,29 @@ class App extends React.Component {
           letter={this.state.letter}
           correctlyGuessedLetters={this.state.correctlyGuessedLetters}
         />
-        <AnswerInput onInputSubmitted={(letter) => {
-          const isThisCorrectLetter = this.state.word.indexOf(letter) !== -1;
-          let updatedCorrectlyGuessedLetters = this.state.correctlyGuessedLetters.slice();
-          let updatedIncorrectlyGuessedLetters = this.state.wrongLetters.slice();
+        <AnswerInput
+          onInputSubmitted={(letter) => {
+            const isThisCorrectLetter = this.state.word.indexOf(letter) !== -1;
+            let updatedCorrectlyGuessedLetters = this.state.correctlyGuessedLetters.slice();
+            let updatedIncorrectlyGuessedLetters = this.state.wrongLetters.slice();
 
-          if (isThisCorrectLetter) {
-            updatedCorrectlyGuessedLetters.push(letter);
-          } else {
-            updatedIncorrectlyGuessedLetters.push(letter);
-          }
-          this.setState({
-            letter,
-            correctlyGuessedLetters: updatedCorrectlyGuessedLetters,
-            wrongLetters: updatedIncorrectlyGuessedLetters,
-          });
-        }} />
-        <HiddenInput onInputSubmitted={(word) => {
-          this.setState({ word });
-        }} />
+            if (isThisCorrectLetter) {
+              updatedCorrectlyGuessedLetters.push(letter);
+            } else {
+              updatedIncorrectlyGuessedLetters.push(letter);
+            }
+            this.setState({
+              letter,
+              correctlyGuessedLetters: updatedCorrectlyGuessedLetters,
+              wrongLetters: updatedIncorrectlyGuessedLetters,
+            });
+          }}
+        />
+        <HiddenInput
+          onInputSubmitted={(word) => {
+            this.setState({ word });
+          }}
+        />
       </div>
     );
   }
