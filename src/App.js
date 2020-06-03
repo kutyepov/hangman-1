@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
 
 function GuessAmount({ guesses = [] }) {
   return (
@@ -30,13 +31,12 @@ class Answer extends React.Component {
         lines.push(<li>_</li>);
       }
     }
-
-    console.log(haveWeEverHitElseClause);
-    if (haveWeEverHitElseClause >= word.length + 1) {
+    if (word.length > 0 && haveWeEverHitElseClause >= word.length) {
       alert('congrats');
+      window.location.reload(false);
     }
 
-    return <ul>{lines}</ul>;
+    return <ul className="guessesContainer">{lines}</ul>;
   }
 }
 
@@ -50,7 +50,7 @@ class IncorrectLetters extends React.Component {
     }
 
     return (
-      <div>
+      <div hidden={this.props.wrongLetters.length === 0}>
         <span>Wrong Letters:</span>
         {wrongLetters}
       </div>
@@ -67,23 +67,28 @@ class AnswerInput extends React.Component {
   }
   render() {
     return (
-      <div>
-        <input
-          type="text"
-          maxLength="1"
-          value={this.state.inputValue}
-          onChange={(e) => {
-            this.setState({ inputValue: e.target.value });
-          }}
-        />
-        <Button
-          onClick={() => {
-            console.log(this.state.inputValue);
-            this.props.onInputSubmitted(this.state.inputValue);
-          }}
-        >
-          Guess
-        </Button>
+      <div hidden={!this.props.hasGameStarted}>
+        <InputGroup size="lg">
+          <InputGroup.Prepend>
+            <Button
+              onClick={() => {
+                this.props.onInputSubmitted(this.state.inputValue);
+              }}
+            >
+              Guess
+            </Button>
+          </InputGroup.Prepend>
+          <FormControl
+            aria-label="Guess"
+            aria-describedby="inputGroup-sizing-sm"
+            type="text"
+            maxLength="1"
+            value={this.state.inputValue}
+            onChange={(e) => {
+              this.setState({ inputValue: e.target.value });
+            }}
+          />
+        </InputGroup>
       </div>
     );
   }
@@ -99,23 +104,29 @@ class HiddenInput extends React.Component {
 
   render() {
     return (
-      <div>
-        <input
-          type="password"
-          value={this.state.inputValue}
-          onChange={(e) => {
-            this.setState({ inputValue: e.target.value.replace(' ', '') });
-          }}
-        />
-        <Button
-          onClick={() => {
-            if (this.state.inputValue.length >= 0) {
-              this.props.onInputSubmitted(this.state.inputValue);
-            }
-          }}
-        >
-          Start Game
-        </Button>
+      <div hidden={this.props.hasGameStarted}>
+        <InputGroup size="lg">
+          <InputGroup.Prepend>
+            <Button
+              onClick={() => {
+                if (this.state.inputValue.length >= 0) {
+                  this.props.onInputSubmitted(this.state.inputValue);
+                }
+              }}
+            >
+              Start Game
+            </Button>
+          </InputGroup.Prepend>
+          <FormControl
+            aria-label="Guess"
+            aria-describedby="inputGroup-sizing-sm"
+            type="password"
+            value={this.state.inputValue}
+            onChange={(e) => {
+              this.setState({ inputValue: e.target.value.replace(' ', '') });
+            }}
+          />
+        </InputGroup>
       </div>
     );
   }
@@ -125,7 +136,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      word: 'x',
+      word: '',
       letter: '',
       correctlyGuessedLetters: [],
       wrongLetters: [],
@@ -140,6 +151,7 @@ class App extends React.Component {
         <IncorrectLetters
           correctlyGuessedLetters={this.state.correctlyGuessedLetters}
           word={this.state.word}
+          hasGameStarted={this.state.word.length !== 0}
           wrongLetters={this.state.wrongLetters}
         />
         <Answer
@@ -148,6 +160,7 @@ class App extends React.Component {
           correctlyGuessedLetters={this.state.correctlyGuessedLetters}
         />
         <AnswerInput
+          hasGameStarted={this.state.word.length !== 0}
           onInputSubmitted={(letter) => {
             const isThisCorrectLetter = this.state.word.indexOf(letter) !== -1;
             let updatedCorrectlyGuessedLetters = this.state.correctlyGuessedLetters.slice();
@@ -166,6 +179,7 @@ class App extends React.Component {
           }}
         />
         <HiddenInput
+          hasGameStarted={this.state.word.length !== 0}
           onInputSubmitted={(word) => {
             this.setState({ word });
           }}

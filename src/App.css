@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+
+.guessesContainer {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
